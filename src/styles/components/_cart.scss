@@ -1,0 +1,35 @@
+.cart-container{
+    width: 100%;
+    min-height: calc(100vh - 75px);
+    padding: 5px;
+    background: whitesmoke;
+    text-align: center;
+
+    .cart-title{
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .cart-gallery{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cart-summary{
+        font-size: 32px;
+        font-weight: 700;
+
+        .cart-checkout-btn{
+            background: $blue;
+            border: none;
+            color: white;
+            font-size: 25px;
+            padding: 5px;
+            box-shadow: inset 6px -6px 10px rgba(0,0,0,0.4);
+            border-radius: 5px;
+            margin: 10px;
+            width: calc(100% - 20px);
+        }
+    }
+}

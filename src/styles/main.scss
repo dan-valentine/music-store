@@ -1,0 +1,20 @@
+// ===== RESET ===== //
+@import './reset';
+
+// ===== Scroll Bar ===== //
+@import './scrollbar';
+
+// ===== Variables ==== //
+$blue:rgb(0, 152, 253);
+
+// ===== COMPONENTS ===== //
+
+@import './components/cart';
+@import './components/header';
+@import './components/home';
+@import './components/products';
+@import './components/singleView';
+@import './components/productDisplay';
+@import './components/cartDisplay';
+@import './components/search';
+
