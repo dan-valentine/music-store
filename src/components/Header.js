@@ -58,7 +58,7 @@ class Header extends Component {
                                         <a className='subtype-link type-link' href={process.env.REACT_APP_LOGIN}>Logout</a>
                                     </Fragment>
                                     :
-                                    <a className='type-link' href={process.env.REACT_APP_LOGIN}>Login</a>
+                                    <a className='type-link' href={`${process.env.REACT_APP_LOGIN}?loginRedirect=${this.props.redirect}`}>Login</a>
 
                             }
                         </div>
@@ -69,10 +69,7 @@ class Header extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        cart: state.cart,
-        user: state.user
-    }
+function mapStateToProps({cart, user, redirect}) {
+    return {cart, user, redirect}
 }
 export default connect(mapStateToProps)(Header)

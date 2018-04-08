@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import StripeCheckout from 'react-stripe-checkout';
-import axios from 'axios';
 import CartDisplay from './CartDisplay';
+import {changeRedirect} from '../ducks/reducer';
 
 class Cart extends Component {
 
-    onToken = (token) => {
-        const { cart } = this.props
-        const cartTotal = cart.reduce((total, product) => {
-            return total + Number(product.price) * product.amount
-        }, 0);
+    componentDidMount(){
+        this.props.changeRedirect(this.props.match.url)
+    }
 
-        token.card = void 0;
-        console.log('token', token);
-        axios.post('/api/payment', { token, amount: cartTotal * 100 }).then(response => {
-            alert('we are in business')
-        });
+    onCheckoutClick=()=>{
+        if(this.props.user.customer_id){
+            this.props.history.push('/checkout');
+        }else{
+            this.props.history.push('/login');
+        }
     }
 
     render() {
@@ -33,13 +31,9 @@ class Cart extends Component {
                     {products}
                 </div>
                 <div className="cart-summary">
-                    <h4>Totghjkal : ${cartTotal}</h4>
-                    <StripeCheckout
-                        token={this.onToken}
-                        stripeKey={process.env.REACT_APP_STRIPE_PUB_KEY}
-                        amount={cartTotal * 100}
-                    />
-                    {!!cart.length && <button className='cart-checkout-btn'>Checkout</button>}
+                    <h4>Total : ${cartTotal}</h4>
+                    
+                    {!!cart.length && <button className='cart-checkout-btn' onClick={this.onCheckoutClick}>Checkout</button>}
                 </div>
             </div>
         );
@@ -50,4 +44,4 @@ function mapStateToProps({ cart, user }) {
     return { cart, user }
 }
 
-export default connect(mapStateToProps)(Cart)
+export default connect(mapStateToProps,{changeRedirect})(Cart)

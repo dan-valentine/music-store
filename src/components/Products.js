@@ -2,9 +2,11 @@ import React, { Component, Fragment } from 'react';
 import axios from 'axios';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+import {changeRedirect} from '../ducks/reducer';
 import ProductDisplay from './ProductDisplay';
 
-export default class Products extends Component {
+class Products extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,6 +22,8 @@ export default class Products extends Component {
         this.getNextPage().then(_ => {
             window.addEventListener('scroll', this.onScroll, false);
         });
+        this.props.changeRedirect(this.props.match.url + this.state.search);
+        
     }
 
     componentWillUnmount() {
@@ -33,7 +37,10 @@ export default class Products extends Component {
                 page: 1,
                 search: nextProps.location.search
             },
-                _ => this.getNextPage())
+                _ => {
+                    this.props.changeRedirect(this.props.match.url + this.state.search);
+                    this.getNextPage()
+                })
         }
     }
 
@@ -91,3 +98,5 @@ export default class Products extends Component {
         );
     }
 }
+
+export default connect(null, {changeRedirect})(Products);

@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const initialState = {
     user: {},
-    cart: []
+    cart: [],
+    redirect: '/'
 }
 // Actions
 const ADD_TO_CART = 'ADD_TO_CART';
@@ -10,6 +11,7 @@ const GET_CART = 'GET_CART';
 const CHANGE_CARY_AMOUNT = 'CHANGE_CARY_AMOUNT';
 const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART';
 const GET_CUSTOMER = 'GET_CUSTOMER';
+const CHANGE_REDIRECT = 'CHANGE_REDIRECT';
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -20,7 +22,9 @@ export default function reducer(state = initialState, action) {
         case GET_CART+'_FULFILLED':
             return Object.assign({}, state, {cart: action.payload})
         case GET_CUSTOMER+'_FULFILLED':
-            return  Object.assign({}, state, {user: action.payload})
+            return Object.assign({}, state, {user: action.payload})
+        case CHANGE_REDIRECT:
+            return Object.assign({}, state, {redirect: action.payload})
         default: return state;
     }
 }
@@ -66,3 +70,10 @@ export function getCustomer() {
         type: GET_CUSTOMER
     }
 };
+
+export function changeRedirect(url){
+    return {
+        payload: url,
+        type: CHANGE_REDIRECT
+    }
+}

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { addToCart } from '../ducks/reducer';
+import { addToCart, changeRedirect } from '../ducks/reducer';
 
 class SingleView extends Component {
     constructor() {
@@ -15,6 +15,7 @@ class SingleView extends Component {
     }
 
     componentDidMount() {
+        this.props.changeRedirect(this.props.match.url);
         axios.get(`/api/product/${this.props.match.params.id}`).then(({ data }) => {
             this.setState({
                 product: data
@@ -93,4 +94,4 @@ class SingleView extends Component {
     }
 }
 
-export default connect(null, { addToCart })(SingleView)
+export default connect(null, { addToCart, changeRedirect })(SingleView)

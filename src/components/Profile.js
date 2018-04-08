@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {changeRedirect} from '../ducks/reducer';
 
-export default class Profile extends Component {
+class Profile extends Component {
+    componentDidMount(){
+        this.props.changeRedirect(this.props.match.url);
+    }
+
     render() {
         return (
             <div className="profile-container">
@@ -9,3 +15,5 @@ export default class Profile extends Component {
         );
     }
 }
+
+export default connect(null, {changeRedirect})(Profile);

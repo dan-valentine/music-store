@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-
 const express = require('express'),
     bodyParser = require('body-parser'),
     massive = require('massive'),
@@ -13,8 +12,6 @@ const express = require('express'),
     paymentCtrl = require('./controllers/paymentCtrl');
 
 const app = express();
-
-
 
 /////////////////////////
 ///TOPLEVEL MIDDELWARE///
@@ -38,15 +35,6 @@ app.use(passport.session());
 ////CART TOPLEVEL MIDDLEWARE////
 ////////////////////////////////
 app.use((req, res, next) =>{
-    // if(!req.session.user){
-    //     req.session.user = {
-    //         user_id: 1,
-    //         user_name: "harrison ford", 
-    //         email: "adventureBuilder2049@gmail.com", 
-    //         name: "adventure", 
-    //         profile_picture : "http://www.placekitten.com/200/250"
-    //     }
-    // }
     if(!req.session.cart){
         req.session.cart = [];
     }
@@ -68,7 +56,6 @@ passport.use(new Auth0Strategy({
 }, function (processToken, refreshToken, extraParams, profile, done) {
     const db = app.get('db');
     db.customer.findCustomerByAuth(profile.id).then(user => {
-        console.log(profile)
         if (user.length) {
             return done(null, user[0].customer_id);
         } else {
@@ -112,14 +99,21 @@ massive(process.env.CONNECTION_STRING).then(db => {
 ///////////////
 
 //Auth Endpoints
-app.get('/auth', passport.authenticate('auth0'));
-app.get('/auth/callback', passport.authenticate('auth0', {
-    successRedirect: process.env.SUCCESS_REDIRECT,
-    failureRedirect: process.env.FAILURE_REDIRECT
-}));
+app.get('/auth', (req, res, next)=>{
+    console.log(req.query.loginRedirect);
+    req.session.redirect = req.query.loginRedirect;
+    next();
+},passport.authenticate('auth0'));
+
+app.get('/auth/callback', (req, res, next) =>{
+    passport.authenticate('auth0', {
+        successRedirect: process.env.SUCCESS_REDIRECT + req.session.redirect,
+        failureRedirect: process.env.FAILURE_REDIRECT
+    })(req, res, next);
+});
+
 app.get('/auth/logout', (req, res) => {
     req.logout();
-    console.log(req.session.user);
     res.redirect(302, 'https://dvalentine.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost%3A3000%2F');
 })
 app.get('/auth/me', (req, res) =>{
